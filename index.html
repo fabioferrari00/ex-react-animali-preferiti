@@ -11,21 +11,50 @@
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <link rel="stylesheet" href="style.css">
   <script type="text/babel">
+
     const { useState } = React;
+
+    function Modal({
+      title,
+      content,
+      show = false,
+      onConfirm = () => { },
+      onClose = () => { }
+    }) {
+      return show && ReactDOM.createPortal(
+        <div className="modal-container">
+          <div className="modal">
+            <h2>{title}</h2>
+            {content}
+            <div>
+              <button onClick={onConfirm}>Conferma</button>
+              <button onClick={onClose}>Annulla</button>
+            </div>
+          </div>
+        </div>,
+        document.body
+      )
+    }
 
 
     const ListaAnimali = () => {
+      const [show, setShow] = useState(false)
       const [animals, setAnimals] = useState([]);
-      const animalsChoices = ["Cane", "Gatto", "Pappagallo", "Cavallo", "Panda"];
+      const [animalName, setAnimalName] = useState("");
 
       function addAnimal() {
-        const random = animalsChoices[Math.floor(Math.random() * animalsChoices.length)];
-        setAnimals([...animals, random]);
+        if (!animalName) {
+          return
+        } else {
+          setAnimals(curr => [...curr, animalName]);
+          setAnimalName('');
+          setShow(false)
+        }
       }
 
       return (
         <>
-          <button onClick={addAnimal}>Aggiungi animale</button>
+          <button onClick={() => setShow(true)}>Aggiungi animale</button>
           <details>
             <summary>
               <strong>Animali</strong>
@@ -36,6 +65,19 @@
               ))}
             </ul>
           </details>
+          <Modal
+            title="Aggiungi animale"
+            show={show}
+            onClose={() => setShow(false)}
+            onConfirm={addAnimal}
+            content={
+              <input
+                type="text"
+                value={animalName}
+                onChange={e => setAnimalName(e.target.value)}
+              />
+            }
+          />
         </>
       )
     }
@@ -45,7 +87,11 @@
     const listaAnimali = document.querySelector('.lista-animali');
     const root = createRoot(listaAnimali);
     root.render(<ListaAnimali />)
+  </script>
 
+  <!-- MILESTONE 3 -->
+
+  <script type="text/babel">
   </script>
 </head>
 
