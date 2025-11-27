@@ -11,17 +11,32 @@
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
   <link rel="stylesheet" href="style.css">
   <script type="text/babel">
+    const { useState } = React;
 
-    const ReactApp = () => {
+
+    const ListaAnimali = () => {
+      const [animals, setAnimals] = useState([]);
+      const animalsChoices = ["Cane", "Gatto", "Pappagallo", "Cavallo", "Panda"];
+
+      function addAnimal() {
+        const random = animalsChoices[Math.floor(Math.random() * animalsChoices.length)];
+        setAnimals([...animals, random]);
+      }
+
       return (
-        <details>
-          <summary>
-            <strong>Animali</strong>
-          </summary>
-          <ul>
-            <li>{ }</li>
-          </ul>
-        </details>
+        <>
+          <button onClick={addAnimal}>Aggiungi animale</button>
+          <details>
+            <summary>
+              <strong>Animali</strong>
+            </summary>
+            <ul>
+              {animals.map((a, i) => (
+                <li key={i}>{a}</li>
+              ))}
+            </ul>
+          </details>
+        </>
       )
     }
   </script>
@@ -29,7 +44,7 @@
     const { createRoot } = ReactDOM;
     const listaAnimali = document.querySelector('.lista-animali');
     const root = createRoot(listaAnimali);
-    root.render(<ReactApp />)
+    root.render(<ListaAnimali />)
 
   </script>
 </head>
